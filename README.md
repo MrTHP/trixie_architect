@@ -62,6 +62,7 @@ Une seule ligne de commande suffit pour lancer l'installateur sur une Debian Tri
 Bash
 
 wget -O - https://raw.githubusercontent.com/MrTHP/trixie_architect/main/trixie_architect_v6.sh | sudo bash
+
 (Remplacez l'URL par le lien "Raw" de votre fichier sur GitHub)
 
 Ou manuellement :
@@ -72,6 +73,7 @@ git clone https://github.com/MrTHP/trixie_architect/.git
 cd trixie_architect/
 chmod +x trixie_architect_v6.sh
 sudo ./trixie_architect_v6.sh
+
 🖼️ Aperçu
 Le script utilise whiptail pour une navigation fluide au clavier :
 
