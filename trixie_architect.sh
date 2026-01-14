@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ==============================================================================
-#  DEBIAN TRIXIE ARCHITECT - v8.0 (Correctif Global + Support T440p)
+#  DEBIAN TRIXIE ARCHITECT - v8.0 (Final & Corrigé)
 # ==============================================================================
 
 # --- 1. INITIALISATION ---
@@ -300,7 +300,7 @@ function module_ai_stack() {
                  systemctl restart docker
             fi
 
-            # CORRECTIF SYNTAXE YAML : Utilisation des tirets pour environment
+            # CORRECTIF SYNTAXE YAML
             cat <<EOF > "$INSTALL_DIR/docker-compose.yml"
 services:
   ollama:
@@ -370,7 +370,6 @@ EOF
             # === CPU ONLY ===
             STACK_SCRIPT+='
             echo "[+] Configuration CPU ONLY (Pas d accélérateur)..."
-            
             cat <<EOF > "$INSTALL_DIR/docker-compose.yml"
 services:
   ollama:
