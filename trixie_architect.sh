@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # ==============================================================================
-#  DEBIAN TRIXIE ARCHITECT - WHIPTAIL EDITION (v7.0 - ThinkPad Optimized)
+#  DEBIAN TRIXIE ARCHITECT - v8.0 (Correctif Global + Support T440p)
 # ==============================================================================
 
 # --- 1. INITIALISATION ---
 
 if [ "$EUID" -ne 0 ]; then
   echo "Erreur : Lancez ce script avec sudo !"
-  echo "Usage: sudo ./trixie_architect_v7.sh"
+  echo "Usage: sudo ./trixie_architect_v8.sh"
   exit 1
 fi
 
@@ -20,7 +20,7 @@ if ! command -v whiptail &> /dev/null; then
     apt-get update -qq && apt-get install -y whiptail wget curl git
 fi
 
-BACKTITLE="Debian Trixie Architect - V7 (User: $REAL_USER)"
+BACKTITLE="Debian Trixie Architect - v8.0 (User: $REAL_USER)"
 
 # --- 2. FONCTIONS UTILITAIRES ---
 
@@ -70,7 +70,6 @@ EOF
 }
 
 function module_gpu() {
-    # Menu principal GPU
     CHOIX_GPU=$(whiptail --title "Installation GPU" --backtitle "$BACKTITLE" --menu "Choisissez votre driver :" 15 70 4 \
     "1" "NVIDIA (Propriétaire + CUDA)" \
     "2" "AMD (Mesa + Vulkan)" \
@@ -86,17 +85,15 @@ function module_gpu() {
                 run_with_logs "Installation AMD" "dpkg --add-architecture i386 && apt update && apt install -y firmware-amd-graphics libgl1-mesa-dri:i386 libglx-mesa0:i386 mesa-vulkan-drivers:i386 libgbm1:i386"
                 ;;
             3)
-                # Sous-menu Intel spécifique
                 CHOIX_INTEL=$(whiptail --title "Configuration Intel" --menu "Quel génération de CPU avez-vous ?" 15 70 2 \
                 "1" "Legacy/Ancien (Gen 4 Haswell - T440p)" \
                 "2" "Moderne (Gen 8+ / Xe Graphics)" 3>&1 1>&2 2>&3)
                 
                 if [ $? -eq 0 ]; then
                     if [ "$CHOIX_INTEL" == "1" ]; then
-                        # i965-va-driver-shaders pour Haswell (T440p)
-                        run_with_logs "Installation Intel Legacy (T440p)" "apt install -y libgl1-mesa-dri libglx-mesa0 mesa-vulkan-drivers intel-media-driver i965-va-driver-shaders"
+                        # CORRECTION : Suppression de intel-media-driver pour Legacy
+                        run_with_logs "Installation Intel Legacy (T440p)" "apt install -y libgl1-mesa-dri libglx-mesa0 mesa-vulkan-drivers i965-va-driver-shaders"
                     else
-                        # Pilote moderne non-free
                         run_with_logs "Installation Intel Moderne" "apt install -y libgl1-mesa-dri libglx-mesa0 mesa-vulkan-drivers intel-media-va-driver-non-free"
                     fi
                 fi
@@ -114,23 +111,10 @@ function module_optimization() {
     3>&1 1>&2 2>&3)
 
     CMD=""
-    
-    if [[ $SELECTION == *"MICROCODE"* ]]; then
-        CMD="$CMD apt install -y intel-microcode;"
-    fi
-
-    if [[ $SELECTION == *"TLP"* ]]; then
-        # Installation + Activation du service
-        CMD="$CMD apt install -y tlp tlp-rdw && systemctl enable --now tlp;"
-    fi
-
-    if [[ $SELECTION == *"THERMALD"* ]]; then
-        CMD="$CMD apt install -y thermald && systemctl enable --now thermald;"
-    fi
-
-    if [[ $SELECTION == *"POWERTOP"* ]]; then
-        CMD="$CMD apt install -y powertop;"
-    fi
+    if [[ $SELECTION == *"MICROCODE"* ]]; then CMD="$CMD apt install -y intel-microcode;"; fi
+    if [[ $SELECTION == *"TLP"* ]]; then CMD="$CMD apt install -y tlp tlp-rdw && systemctl enable --now tlp;"; fi
+    if [[ $SELECTION == *"THERMALD"* ]]; then CMD="$CMD apt install -y thermald && systemctl enable --now thermald;"; fi
+    if [[ $SELECTION == *"POWERTOP"* ]]; then CMD="$CMD apt install -y powertop;"; fi
 
     if [ -n "$CMD" ]; then run_with_logs "Installation Optimisations" "$CMD"; fi
 }
@@ -168,12 +152,9 @@ function module_browsers() {
     "TOR" "Tor Browser Launcher" OFF \
     3>&1 1>&2 2>&3)
     
-    # Chrome
     if [[ $SELECTION == *"CHROME"* ]]; then
          run_with_logs "Installation Chrome" "wget -O /tmp/chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && apt install -y /tmp/chrome.deb && rm /tmp/chrome.deb"
     fi
-
-    # Zen
     if [[ $SELECTION == *"ZEN"* ]]; then
         run_with_logs "Installation Zen Browser" "sudo -u $REAL_USER bash -c \"wget -O /tmp/zen.tar.xz 'https://github.com/zen-browser/desktop/releases/latest/download/zen.linux-x86_64.tar.xz' && rm -rf $REAL_HOME/zen-browser && tar -xJf /tmp/zen.tar.xz -C $REAL_HOME && mv $REAL_HOME/zen $REAL_HOME/zen-browser\"; \
         cat > $REAL_HOME/.local/share/applications/zen-browser.desktop <<EOL
@@ -188,8 +169,6 @@ Terminal=false
 EOL
         chown $REAL_USER:$REAL_USER $REAL_HOME/.local/share/applications/zen-browser.desktop && chmod +x $REAL_HOME/.local/share/applications/zen-browser.desktop"
     fi
-
-    # Firefox
     if [[ $SELECTION == *"FIREFOX"* ]]; then
         run_with_logs "Installation Firefox" "sudo -u $REAL_USER bash -c \"wget -O /tmp/firefox.tar.xz 'https://download.mozilla.org/?product=firefox-latest&os=linux64&lang=fr' && rm -rf $REAL_HOME/firefox && tar -xJf /tmp/firefox.tar.xz -C $REAL_HOME\"; \
         cat > $REAL_HOME/.local/share/applications/firefox-manual.desktop <<EOL
@@ -202,7 +181,6 @@ Categories=Network;WebBrowser;
 EOL
         chown $REAL_USER:$REAL_USER $REAL_HOME/.local/share/applications/firefox-manual.desktop"
     fi
-
     if [[ $SELECTION == *"TOR"* ]]; then
         run_with_logs "Installation Tor" "apt install -y torbrowser-launcher"
     fi
@@ -252,8 +230,6 @@ function module_software() {
     3>&1 1>&2 2>&3)
 
     CMD=""
-    
-    # Paquets APT classiques
     PACKAGES=""
     if [[ $SELECTION == *"VLC"* ]]; then PACKAGES="$PACKAGES vlc"; fi
     if [[ $SELECTION == *"GIMP"* ]]; then PACKAGES="$PACKAGES gimp"; fi
@@ -262,12 +238,10 @@ function module_software() {
     
     if [ -n "$PACKAGES" ]; then CMD="$CMD apt install -y $PACKAGES;"; fi
     
-    # VS Code (.deb)
     if [[ $SELECTION == *"VSCODE"* ]]; then
         CMD="$CMD wget -O /tmp/vscode.deb 'https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64' && apt install -y /tmp/vscode.deb;"
     fi
 
-    # OBS Studio (Flatpak)
     if [[ $SELECTION == *"OBS"* ]]; then
         CMD="$CMD apt install -y flatpak && flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo && flatpak install -y flathub com.obsproject.Studio;"
     fi
@@ -276,13 +250,20 @@ function module_software() {
 }
 
 function module_ai_stack() {
-    CHOIX_AI_GPU=$(whiptail --title "AI Stack Configuration" --backtitle "$BACKTITLE" --menu "Quel type d'accélération GPU utiliser ?" 15 60 2 \
+    # AJOUT OPTION 3: CPU ONLY (Pour votre T440p)
+    CHOIX_AI_GPU=$(whiptail --title "AI Stack Configuration" --backtitle "$BACKTITLE" --menu "Quel type d'accélération GPU utiliser ?" 15 70 3 \
     "1" "NVIDIA (CUDA via Nvidia-Toolkit)" \
-    "2" "AMD (ROCm via mappage Device)" 3>&1 1>&2 2>&3)
+    "2" "AMD (ROCm via mappage Device)" \
+    "3" "CPU ONLY (Intel HD / Pas de GPU dédié)" 3>&1 1>&2 2>&3)
 
     if [ $? -ne 0 ]; then return; fi # Annuler
 
-    if confirm_action "Installation AI Stack" "Installation Docker, Ollama, OpenWebUI et SearXNG.\nVersion choisie : $([ "$CHOIX_AI_GPU" == "1" ] && echo "NVIDIA" || echo "AMD")"; then
+    TYPE_INSTALL="Inconnu"
+    if [ "$CHOIX_AI_GPU" == "1" ]; then TYPE_INSTALL="NVIDIA"; fi
+    if [ "$CHOIX_AI_GPU" == "2" ]; then TYPE_INSTALL="AMD"; fi
+    if [ "$CHOIX_AI_GPU" == "3" ]; then TYPE_INSTALL="CPU (Lent mais compatible)"; fi
+
+    if confirm_action "Installation AI Stack" "Installation Docker, Ollama, OpenWebUI et SearXNG.\nVersion choisie : $TYPE_INSTALL"; then
         
         STACK_SCRIPT='
         set -e
@@ -306,7 +287,7 @@ function module_ai_stack() {
         '
 
         if [ "$CHOIX_AI_GPU" == "1" ]; then
-            # === OPTION NVIDIA ===
+            # === NVIDIA ===
             STACK_SCRIPT+='
             echo "[+] Configuration NVIDIA..."
             if ! dpkg -l | grep -q nvidia-container-toolkit; then
@@ -319,6 +300,7 @@ function module_ai_stack() {
                  systemctl restart docker
             fi
 
+            # CORRECTIF SYNTAXE YAML : Utilisation des tirets pour environment
             cat <<EOF > "$INSTALL_DIR/docker-compose.yml"
 services:
   ollama:
@@ -344,12 +326,13 @@ services:
     restart: always
     ports: ["8080:8080"]
     volumes: [./searxng:/etc/searxng]
-    environment: [{BASE_URL: "http://localhost:8080/"}]
+    environment:
+      - BASE_URL=http://localhost:8080/
 volumes: {ollama: {}, open-webui: {}}
 EOF
             '
-        else
-            # === OPTION AMD (ROCm) ===
+        elif [ "$CHOIX_AI_GPU" == "2" ]; then
+            # === AMD ===
             STACK_SCRIPT+='
             echo "[+] Configuration AMD ROCm..."
             usermod -aG render,video '$REAL_USER'
@@ -378,7 +361,39 @@ services:
     restart: always
     ports: ["8080:8080"]
     volumes: [./searxng:/etc/searxng]
-    environment: [{BASE_URL: "http://localhost:8080/"}]
+    environment:
+      - BASE_URL=http://localhost:8080/
+volumes: {ollama: {}, open-webui: {}}
+EOF
+            '
+        else
+            # === CPU ONLY ===
+            STACK_SCRIPT+='
+            echo "[+] Configuration CPU ONLY (Pas d accélérateur)..."
+            
+            cat <<EOF > "$INSTALL_DIR/docker-compose.yml"
+services:
+  ollama:
+    image: ollama/ollama:latest
+    restart: always
+    ports: ["11434:11434"]
+    volumes: [ollama:/root/.ollama]
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    restart: always
+    ports: ["3000:8080"]
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - SEARXNG_QUERY_URL=http://searxng:8080/search?q=
+    volumes: [open-webui:/app/backend/data]
+    depends_on: [ollama, searxng]
+  searxng:
+    image: searxng/searxng:latest
+    restart: always
+    ports: ["8080:8080"]
+    volumes: [./searxng:/etc/searxng]
+    environment:
+      - BASE_URL=http://localhost:8080/
 volumes: {ollama: {}, open-webui: {}}
 EOF
             '
