@@ -70,8 +70,11 @@ Ou manuellement :
 Bash
 
 git clone https://github.com/MrTHP/trixie_architect/.git
+
 cd trixie_architect/
+
 chmod +x trixie_architect_v6.sh
+
 sudo ./trixie_architect_v6.sh
 
 🖼️ Aperçu
