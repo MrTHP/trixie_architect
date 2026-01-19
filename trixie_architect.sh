@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # ==============================================================================
-#  DEBIAN TRIXIE ARCHITECT - v8.0 (Final & Corrigé)
+#  DEBIAN TRIXIE ARCHITECT - v8.1 (Avec Perplexica & Fix Ports)
 # ==============================================================================
 
 # --- 1. INITIALISATION ---
 
 if [ "$EUID" -ne 0 ]; then
   echo "Erreur : Lancez ce script avec sudo !"
-  echo "Usage: sudo ./trixie_architect_v8.sh"
+  echo "Usage: sudo ./trixie_architect.sh"
   exit 1
 fi
 
@@ -20,7 +20,7 @@ if ! command -v whiptail &> /dev/null; then
     apt-get update -qq && apt-get install -y whiptail wget curl git
 fi
 
-BACKTITLE="Debian Trixie Architect - v8.0 (User: $REAL_USER)"
+BACKTITLE="Debian Trixie Architect - v8.1 (User: $REAL_USER)"
 
 # --- 2. FONCTIONS UTILITAIRES ---
 
@@ -258,6 +258,12 @@ function module_ai_stack() {
 
     if [ $? -ne 0 ]; then return; fi # Annuler
 
+    # Question pour Perplexica
+    INSTALL_PERPLEXICA=false
+    if whiptail --title "Perplexica AI" --backtitle "$BACKTITLE" --yesno "Voulez-vous aussi installer Perplexica (Moteur de recherche AI) ?\n\nIl sera configuré sur le port 7000 pour éviter les conflits." 12 70; then
+        INSTALL_PERPLEXICA=true
+    fi
+
     TYPE_INSTALL="Inconnu"
     if [ "$CHOIX_AI_GPU" == "1" ]; then TYPE_INSTALL="NVIDIA"; fi
     if [ "$CHOIX_AI_GPU" == "2" ]; then TYPE_INSTALL="AMD"; fi
@@ -300,7 +306,6 @@ function module_ai_stack() {
                  systemctl restart docker
             fi
 
-            # CORRECTIF SYNTAXE YAML
             cat <<EOF > "$INSTALL_DIR/docker-compose.yml"
 services:
   ollama:
@@ -400,18 +405,46 @@ EOF
 
         # --- Fin du script commun ---
         STACK_SCRIPT+='
-        # Config SearXNG
+        # Config SearXNG pour JSON (Important pour Perplexica)
         echo "use_default_settings: true" > "$INSTALL_DIR/searxng/settings.yml"
         echo "server: {secret_key: \"$(openssl rand -hex 16)\"}" >> "$INSTALL_DIR/searxng/settings.yml"
+        echo "search: {formats: [html, json]}" >> "$INSTALL_DIR/searxng/settings.yml"
 
         chown -R '$REAL_USER':docker "$INSTALL_DIR"
         cd "$INSTALL_DIR"
-        echo "[+] Lancement des conteneurs..."
+        echo "[+] Lancement des conteneurs principaux..."
         docker compose up -d
         '
 
+        # AJOUT PERPLEXICA
+        if [ "$INSTALL_PERPLEXICA" = true ]; then
+            STACK_SCRIPT+='
+            echo "[+] Installation de Perplexica (Port 7000)..."
+            # Nettoyage si conteneur existant
+            docker stop perplexica 2>/dev/null || true
+            docker rm perplexica 2>/dev/null || true
+            
+            # Lancement Perplexica connecté au host
+            docker run -d \
+              --name perplexica \
+              --restart always \
+              -p 7000:3000 \
+              --add-host=host.docker.internal:host-gateway \
+              -e SEARXNG_API_URL=http://host.docker.internal:8080 \
+              -e OLLAMA_API_URL=http://host.docker.internal:11434 \
+              -v perplexica-data:/home/perplexica/data \
+              itzcrazykns1337/perplexica:slim-latest
+            '
+        fi
+
         run_with_logs "Déploiement AI Stack" "$STACK_SCRIPT"
-        whiptail --msgbox "Installation Terminée !\n\nOpenWebUI: http://localhost:3000\nSearXNG: http://localhost:8080" 10 50
+        
+        FINAL_MSG="Installation Terminée !\n\nOpenWebUI: http://localhost:3000\nSearXNG: http://localhost:8080"
+        if [ "$INSTALL_PERPLEXICA" = true ]; then
+            FINAL_MSG="$FINAL_MSG\nPerplexica: http://localhost:7000"
+        fi
+        
+        whiptail --msgbox "$FINAL_MSG" 12 60
     fi
 }
 
@@ -426,7 +459,7 @@ while true; do
     "5 NAVIGATEURS" "Chrome, Zen, Firefox, Tor" \
     "6 SOCIAL" "Discord, Telegram" \
     "7 LOGICIELS" "VLC, OBS(Flatpak), VSCode, Tools" \
-    "8 AI STACK" "Docker + Ollama + WebUI" \
+    "8 AI STACK" "Docker + Ollama + WebUI + Perplexica" \
     "9 KERNEL" "Upgrade via Backports" \
     "QUITTER" "Sortir du script" 3>&1 1>&2 2>&3)
 
