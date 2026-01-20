@@ -71,7 +71,7 @@ Ouvrez un terminal et collez cette commande :
 wget -O trixie_architect.sh https://raw.githubusercontent.com/MrTHP/trixie_architect/main/trixie_architect.sh && chmod +x trixie_architect.sh && sudo ./trixie_architect.sh
 ```
 
-🖼️ Aperçu & Navigation
+### 🖼️ Aperçu & Navigation
 
 Le script utilise whiptail pour une navigation fluide et stable au clavier :
 
@@ -83,7 +83,7 @@ Sélectionnez les options avec Espace (pour cocher/décocher).
 
 Validez avec Entrée.
 
-⚠️ Avertissement
+### ⚠️ Avertissement
 
 Ce script est conçu spécifiquement pour Debian Trixie (Testing).
 
@@ -91,7 +91,7 @@ L'utilisation sur Debian Stable (Bookworm) ou Ubuntu peut causer des conflits ma
 
 Utilisez-le à vos propres risques sur une machine de test ou une installation fraîche.
 
-🤝 Contribution
+### 🤝 Contribution
 
 Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une "Issue" ou une "Pull Request" pour ajouter des fonctionnalités, supporter de nouveaux matériels ou corriger des bugs.
 
