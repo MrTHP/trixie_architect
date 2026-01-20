@@ -82,7 +82,7 @@ Méthode rapide (One-Liner)
 
 Ouvrez un terminal et collez cette commande :
 
-```wget -O trixie_architect.sh https://raw.githubusercontent.com/MrTHP/trixie_architect/main/trixie_architect.sh && chmod +x trixie_architect.sh``` 
+```wget -O trixie_architect.sh https://raw.githubusercontent.com/MrTHP/trixie_architect/main/trixie_architect.sh && chmod +x trixie_architect.sh && sudo ./trixie_architect.sh``` 
 
 
 🖼️ Aperçu & Navigation
