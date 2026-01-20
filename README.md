@@ -82,21 +82,8 @@ Méthode rapide (One-Liner)
 
 Ouvrez un terminal et collez cette commande :
 
-wget -O - https://raw.githubusercontent.com/MrTHP/trixie_architect/main/trixie_architect.sh
-chmod +x trixie_architect.sh
-sudo ./trixie_architect.sh
+```wget -O trixie_architect.sh https://raw.githubusercontent.com/MrTHP/trixie_architect/main/trixie_architect.sh && chmod +x trixie_architect.sh``` 
 
-Méthode manuelle
-
-Ouvrez un terminal et collez cette commande :
-
-git clone https://github.com/MrTHP/trixie_architect.git
-
-cd trixie_architect/
-
-chmod +x trixie_architect.sh
-
-sudo ./trixie_architect.sh
 
 🖼️ Aperçu & Navigation
 
