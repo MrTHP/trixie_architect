@@ -65,15 +65,11 @@ Une seule ligne de commande suffit pour lancer l'installateur sur une Debian Tri
 
 ### Méthode rapide (One-Liner)
 
-Ouvrez un terminal et collez ces commandes :
+Ouvrez un terminal et collez cette commande :
 
 ```bash
-wget -O - https://raw.githubusercontent.com/MrTHP/trixie_architect/main/trixie_architect.sh > trixie_architect.sh
-chmod +x trixie_architect.sh
-sudo ./trixie_architect.sh
-=======
-```wget -O trixie_architect.sh https://raw.githubusercontent.com/MrTHP/trixie_architect/main/trixie_architect.sh && chmod +x trixie_architect.sh && sudo ./trixie_architect.sh``` 
-
+wget -O trixie_architect.sh https://raw.githubusercontent.com/MrTHP/trixie_architect/main/trixie_architect.sh && chmod +x trixie_architect.sh && sudo ./trixie_architect.sh
+```
 
 🖼️ Aperçu & Navigation
 
