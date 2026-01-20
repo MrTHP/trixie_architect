@@ -71,3 +71,32 @@ Ouvrez un terminal et collez ces commandes :
 wget -O - https://raw.githubusercontent.com/MrTHP/trixie_architect/main/trixie_architect.sh > trixie_architect.sh
 chmod +x trixie_architect.sh
 sudo ./trixie_architect.sh
+=======
+```wget -O trixie_architect.sh https://raw.githubusercontent.com/MrTHP/trixie_architect/main/trixie_architect.sh && chmod +x trixie_architect.sh && sudo ./trixie_architect.sh``` 
+
+
+🖼️ Aperçu & Navigation
+
+Le script utilise whiptail pour une navigation fluide et stable au clavier :
+
+Lancez le script avec sudo.
+
+Naviguez avec les Flèches (Haut/Bas).
+
+Sélectionnez les options avec Espace (pour cocher/décocher).
+
+Validez avec Entrée.
+
+⚠️ Avertissement
+
+Ce script est conçu spécifiquement pour Debian Trixie (Testing).
+
+L'utilisation sur Debian Stable (Bookworm) ou Ubuntu peut causer des conflits majeurs (notamment via le remplacement du sources.list).
+
+Utilisez-le à vos propres risques sur une machine de test ou une installation fraîche.
+
+🤝 Contribution
+
+Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une "Issue" ou une "Pull Request" pour ajouter des fonctionnalités, supporter de nouveaux matériels ou corriger des bugs.
+
+Fait avec ❤️ pour la communauté Linux.
