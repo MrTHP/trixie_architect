@@ -76,7 +76,7 @@ sudo apt install polkitd pkexec python3-tk
 
 ### Binaire précompilé (recommandé)
 
-Télécharge le binaire universel depuis les (https://github.com/MrTHP/trixie_architect/blob/80cdc2a6b31c2bf667630fd7fe804fd654e333db/trixie-architect-universal) :
+Télécharge le binaire universel depuis https://github.com/MrTHP/trixie_architect/raw/80cdc2a6b31c2bf667630fd7fe804fd654e333db/trixie-architect-universal
 
 ```bash
 # Rendre exécutable
