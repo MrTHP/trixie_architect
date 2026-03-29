@@ -1,112 +1,139 @@
-🏗️ Trixie Architect - Ultimate Debian Setup
+# 🧊 Trixie Architect
 
-Trixie Architect est un script de post-installation tout-en-un conçu pour Debian Trixie (Testing). Il transforme une installation Debian minimale en une station de travail puissante pour le Gaming, le Développement et l'Intelligence Artificielle.
+<div align="center">
 
-Inspiré par des projets comme Archinstall et WinUtil, ce script offre une interface graphique en terminal (TUI) simple, rapide et modulaire.
+```
+████████╗██████╗ ██╗██╗  ██╗██╗███████╗
+╚══██╔══╝██╔══██╗██║╚██╗██╔╝██║██╔════╝
+   ██║   ██████╔╝██║ ╚███╔╝ ██║█████╗  
+   ██║   ██╔══██╗██║ ██╔██╗ ██║██╔══╝  
+   ██║   ██║  ██║██║██╔╝ ██╗██║███████╗
+   ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚═╝╚══════╝
+        A R C H I T E C T  v9.x
+```
 
-🚀 Fonctionnalités
+**GUI de post-installation pour Debian Trixie**
 
-Le script propose un menu interactif (basé sur whiptail) couvrant tous les besoins modernes :
+[![Debian](https://img.shields.io/badge/Debian-Trixie-A81D33?style=for-the-badge&logo=debian&logoColor=white)](https://www.debian.org/)
+[![Python](https://img.shields.io/badge/Python-3.x-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Tkinter](https://img.shields.io/badge/GUI-Tkinter-FF6B35?style=for-the-badge)](https://docs.python.org/3/library/tkinter.html)
+[![Licence](https://img.shields.io/badge/Licence-MIT-green?style=for-the-badge)](LICENSE)
 
-🛠️ Système & Noyau
+*Un outil cyberpunk pour configurer Debian Trixie après installation — en un seul clic.*
 
-Configuration automatique des dépôts sources.list pour Trixie (Testing) + Backports.
+</div>
 
-Mise à jour complète du système.
+---
 
-Installation du dernier noyau (Kernel) via les backports.
+## 📸 Aperçu
 
-🖥️ Pilotes GPU (Détection & Installation)
+Trixie Architect est une interface graphique (GUI) Python/Tkinter conçue pour automatiser et simplifier la configuration post-installation de **Debian Trixie**. Il regroupe en un seul endroit tous les réglages essentiels : GPU, gaming, applications, stack IA, navigateurs, optimisations système et plus encore.
 
-NVIDIA : Installation des pilotes propriétaires + CUDA Toolkit + NVIDIA Container Toolkit (pour l'IA).
+---
 
-AMD : Installation des pilotes libres (Mesa/Vulkan) + Support ROCm (pour l'IA) + bibliothèques 32-bit.
+## ✨ Fonctionnalités
 
-INTEL : Support complet avec distinction architecturale :
+### 🎨 Thèmes visuels (6 thèmes intégrés)
+| Thème | Description |
+|-------|-------------|
+| **Cyberpunk** | Neon cyan/magenta sur fond sombre |
+| **Matrix** | Vert terminal classique |
+| **Dracula** | Violet/rose pastel sombre |
+| **Nord** | Bleu arctique épuré |
+| **Gruvbox** | Tons chauds rétro |
+| **Mocha** | Catppuccin Mocha doux |
 
-Legacy (Gen 4-7 / Haswell / T440p) : Pilotes i965 et shaders pour l'accélération vidéo matérielle.
+### 🌐 Langue
+- Interface disponible en **Français** et **Anglais** (bascule à la volée)
+- Système de traduction à 159 clés
 
-Moderne (Gen 8+ / Iris Xe) : Pilotes intel-media-driver (non-free).
+### 📦 Modules (9 panneaux)
 
-🔋 Optimisation Laptop & ThinkPad
+| Panneau | Contenu |
+|---------|---------|
+| **🖥️ Système** | Mise à jour, outils de base, polices, codecs |
+| **🎮 GPU** | Détection automatique NVIDIA/AMD/Intel, drivers, CUDA |
+| **⚡ Optimisation** | `zram`, `preload`, `earlyoom`, réglages kernel |
+| **🕹️ Gaming** | Steam, Lutris, Wine, MangoHud, GameMode, ProtonUp |
+| **🌐 Navigateurs** | Firefox, Brave, Chromium, LibreWolf |
+| **💬 Social** | Discord, Signal, Telegram, Element |
+| **📱 Logiciels** | Flatpak, GNOME Software, Bazaar, apps courantes |
+| **🤖 AI Stack** | Ollama, Open-WebUI, SearXNG, Perplexica |
+| **🐧 Kernel** | Liquorix, XanMod, HWE |
 
-Module dédié pour prolonger la durée de vie de la batterie et réduire la chauffe :
+---
 
-TLP : Gestion avancée de l'énergie (activé par défaut).
+## 🚀 Installation
 
-Intel Microcode : Correctifs de sécurité et stabilité CPU cruciaux.
+### Prérequis
 
-Thermald : Régulation thermique intelligente pour processeurs Intel.
+```bash
+# Packages requis sur Debian Trixie
+sudo apt install polkitd pkexec python3-tk
+```
 
-🎮 Gaming Ready
+> ⚠️ **Note Debian Trixie** : `polkitd` et `pkexec` sont maintenant des paquets séparés (plus `polkit`/`policykit-1`).
 
-Installation de Steam (avec support 32-bit).
+### Binaire précompilé (recommandé)
 
-Configuration complète Flatpak + Flathub.
+Télécharge le binaire universel depuis les [Releases](../../releases) :
 
-Installation de ProtonPlus (gestionnaire de versions Proton/GE).
+```bash
+# Rendre exécutable
+chmod +x trixie-architect-universal
 
-Optimisations pour le jeu sous Linux.
-
-🤖 AI Stack (Locale & Privée)
-
-Déploiement automatique via Docker d'une stack complète pour l'IA générative :
-
-Ollama : Pour faire tourner les LLM (Llama3, Mistral, DeepSeek) en local.
-
-OpenWebUI : Une interface magnifique (style ChatGPT) pour vos modèles.
-
-SearXNG : Moteur de recherche privé, connecté à l'IA pour la recherche web.
-
-Configuration Hybride : Le script détecte et configure automatiquement Docker pour utiliser l'accélération GPU (NVIDIA CUDA ou AMD ROCm) selon votre matériel.
-
-🌐 Navigateurs & Social
-
-Installation facile de Google Chrome, Firefox, Zen Browser et Tor.
-
-Installation de Discord et Telegram.
-
-📦 Logiciels Utiles
-
-OBS Studio (Version Flatpak officielle pour meilleurs codecs).
-
-VS Code (Version .deb officielle Microsoft).
-
-VLC, GIMP, qBittorrent, Fastfetch.
-
-📥 Installation
-
-Une seule ligne de commande suffit pour lancer l'installateur sur une Debian Trixie fraîchement installée.
-
-Méthode rapide (One-Liner)
-
-Ouvrez un terminal et collez cette commande :
-
-```wget -O trixie_architect.sh https://raw.githubusercontent.com/MrTHP/trixie_architect/main/trixie_architect.sh && chmod +x trixie_architect.sh && sudo ./trixie_architect.sh``` 
+# Lancer
+./trixie-architect-universal
+```
 
 
-🖼️ Aperçu & Navigation
+## 🔧 Élévation de privilèges
 
-Le script utilise whiptail pour une navigation fluide et stable au clavier :
+Trixie Architect utilise `pkexec` pour les opérations nécessitant les droits root, avec correction automatique de `xhost` pour les environnements graphiques :
 
-Lancez le script avec sudo.
+```bash
+# Si nécessaire, autoriser X11 manuellement
+xhost +SI:localuser:root
+```
 
-Naviguez avec les Flèches (Haut/Bas).
+---
 
-Sélectionnez les options avec Espace (pour cocher/décocher).
+## 🖥️ Compatibilité
 
-Validez avec Entrée.
+| Élément | Version |
+|---------|---------|
+| Debian | Trixie (13) |
+| Python | 3.11+ |
+| DE recommandé | GNOME (Xorg) |
+| Architecture | x86_64 |
 
-⚠️ Avertissement
+> Testé principalement sur **GNOME/Xorg** avec GPU NVIDIA (RTX).  
+> AMD et Intel supportés via détection automatique GPU (`lspci`).
 
-Ce script est conçu spécifiquement pour Debian Trixie (Testing).
+---
 
-L'utilisation sur Debian Stable (Bookworm) ou Ubuntu peut causer des conflits majeurs (notamment via le remplacement du sources.list).
+## 🤝 Contribution
 
-Utilisez-le à vos propres risques sur une machine de test ou une installation fraîche.
+Les PRs sont les bienvenues ! Pour les changements majeurs, ouvre d'abord une *issue* pour discuter.
 
-🤝 Contribution
+1. Fork le projet
+2. Crée ta branche (`git checkout -b feature/ma-fonctionnalite`)
+3. Commit (`git commit -m 'Ajout de ma fonctionnalité'`)
+4. Push (`git push origin feature/ma-fonctionnalite`)
+5. Ouvre une Pull Request
 
-Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une "Issue" ou une "Pull Request" pour ajouter des fonctionnalités, supporter de nouveaux matériels ou corriger des bugs.
+---
 
-Fait avec ❤️ pour la communauté Linux.
+## 📜 Licence
+
+Distribué sous licence **MIT**. Voir [`LICENSE`](LICENSE) pour plus d'informations.
+
+---
+
+<div align="center">
+
+Fait avec ☕ et 🐧 par **MrTHP** | Baie-Comeau, Québec
+
+*"Configure once, install everywhere."*
+
+</div>
